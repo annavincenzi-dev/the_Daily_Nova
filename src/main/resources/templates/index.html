@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org">
+
+<!-- head fragment -->
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- boostrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <title th:text="${title}">Title</title>
+</head>
+
+
+<body>
+
+    <!-- navbar fragment -->
+    <nav th:fragment="navbar">
+        <a th:href="@{/}" class="btn btn-primary">The Daily Nova</a>
+
+        <ul>
+            <li>
+                <a href="">Crea Articolo</a>
+            </li>
+            <li>
+                <a href="">Crea Articolo</a>
+            </li>
+            <li>
+                <a href="">Register</a>
+            </li>
+            <li>
+                <a href="">Login</a>
+            </li>
+            <li>
+                <a href="">Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- footer fragment -->
+     <footer th:fragment="footer">
+        <ul>
+            <li>
+                <a href="">Company info</a>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <a href="">Job Opportunities</a>
+            </li>
+        </ul>
+     </footer>
+   
+    <!-- boostrap CDN script fragment -->
+    <script th:fragment="bootstrapScript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+</body>
+</html>
