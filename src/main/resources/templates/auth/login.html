@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}"></head>
+
+<body>
+
+    <head th:insert="~{index :: navbar}"></head>
+
+    <div th:if="${param.error}">
+        <p>Invalid email or password. Please try again</p>
+    </div>
+
+    <div th:if="${param.logout}">
+        <p>You have been logged out</p>
+    </div>
+
+    <!-- form di login -->
+
+    <form th:action="@{/login}" method="post" role="form">
+
+        <div>
+            <label for="username">Email</label>
+            <input type="text" id="username" name="username">
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+
+        <div>
+            <button type="submit">Login</button>
+            <span>Don't have an account? 
+                <a th:href="@{/register}">Register</a>
+            </span>
+        </div>
+    </form>
+
+    <head th:insert="~{index :: footer}"></head>
+    <script th:replace="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>

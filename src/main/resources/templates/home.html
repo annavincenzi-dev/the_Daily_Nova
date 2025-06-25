@@ -6,6 +6,10 @@ xmls:th="http://www.thymeleaf.org">
 <body>
     <head th:insert="~{index :: navbar}"></head>
 
+    <div th:if="${param.notAuthorized}">
+        <p>Not authorized!</p>
+    </div>
+
     <main>
         <h1>Home</h1>
     </main>
