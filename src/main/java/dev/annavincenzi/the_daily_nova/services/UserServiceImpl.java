@@ -1,5 +1,7 @@
 package dev.annavincenzi.the_daily_nova.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.annavincenzi.the_daily_nova.dtos.UserDto;
+import dev.annavincenzi.the_daily_nova.models.Role;
 import dev.annavincenzi.the_daily_nova.models.User;
+import dev.annavincenzi.the_daily_nova.repositories.RoleRepository;
 import dev.annavincenzi.the_daily_nova.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,6 +44,9 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDto.getFirstName() + " " + userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        Role role = roleRepository.findByName("ROLE_USER");
+        user.setRoles(List.of(role));
 
         userRepository.save(user);
     }
