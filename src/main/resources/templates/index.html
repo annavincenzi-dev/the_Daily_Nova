@@ -35,6 +35,9 @@
                 <a th:href="@{/logout}">Logout</a>
             </li>
             <li sec:authorize="isAuthenticated">
+                <a href="/articles/create">Create new article</a>
+            </li>
+            <li sec:authorize="isAuthenticated">
                 <p sec:authorize="isAuthenticated" th:text="'Benvenut*, ' + ${#authentication.principal.fullName}">Benvenut</p>
                 <p sec:authorize="isAuthenticated" th:text="${#authentication.principal.authorities[0].authority.replace('ROLE_', '')}">Role</p>
             </li>
