@@ -6,7 +6,7 @@ xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <head th:insert="~{index :: navbar}"></head>
+    <div th:insert="~{index :: navbar}"></div>
 
     <div th:if="${param.error}">
         <p>Invalid email or password. Please try again</p>
@@ -38,7 +38,7 @@ xmlns:th="http://www.thymeleaf.org">
         </div>
     </form>
 
-    <head th:insert="~{index :: footer}"></head>
+    <div th:insert="~{index :: footer}"></div>
     <script th:replace="~{index :: bootstrapScript}"></script>
 
 </body>

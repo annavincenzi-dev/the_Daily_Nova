@@ -10,6 +10,8 @@ xmls:th="http://www.thymeleaf.org">
         <p>Not authorized!</p>
     </div>
 
+    <div th:if="${successMessage}"><p th:text="${successMessage}"></p></div>
+
     <main>
         <h1>Home</h1>
     </main>
