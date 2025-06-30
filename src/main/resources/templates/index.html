@@ -19,12 +19,6 @@
         <a th:href="@{/}" class="btn btn-primary">The Daily Nova</a>
 
         <ul>
-            <li>
-                <a href="">Crea Articolo</a>
-            </li>
-            <li>
-                <a href="">Crea Articolo</a>
-            </li>
             <li sec:authorize="isAnonymous" >
                 <a th:href="@{/register}">Register</a>
             </li>
@@ -36,6 +30,9 @@
             </li>
             <li sec:authorize="isAuthenticated">
                 <a href="/articles/create">Create new article</a>
+            </li>
+            <li>
+                <a href="/articles">All Articles</a>
             </li>
             <li sec:authorize="isAuthenticated">
                 <p sec:authorize="isAuthenticated" th:text="'Benvenut*, ' + ${#authentication.principal.fullName}">Benvenut</p>

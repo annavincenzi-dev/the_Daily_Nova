@@ -1,8 +1,10 @@
 package dev.annavincenzi.the_daily_nova.dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import dev.annavincenzi.the_daily_nova.models.Category;
+import dev.annavincenzi.the_daily_nova.models.Image;
 import dev.annavincenzi.the_daily_nova.models.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,5 @@ public class ArticleDto {
     private LocalDate publishedOn;
     private User user;
     private Category category;
+    private List<Image> images;
 }

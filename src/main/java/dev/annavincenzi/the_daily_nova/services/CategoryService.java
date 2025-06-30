@@ -23,7 +23,7 @@ public class CategoryService implements CrudService<CategoryDto, Category, Long>
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryDto create(Category model, Principal principal, MultipartFile file) {
+    public CategoryDto create(Category model, Principal principal, MultipartFile[] file) {
         // TODO Auto-generated method stub
         return null;
     }

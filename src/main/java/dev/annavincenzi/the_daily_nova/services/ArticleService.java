@@ -1,14 +1,20 @@
 package dev.annavincenzi.the_daily_nova.services;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.models.Article;
@@ -20,6 +26,9 @@ import dev.annavincenzi.the_daily_nova.repositories.UserRepository;
 public class ArticleService implements CrudService<ArticleDto, Article, Long> {
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -29,7 +38,20 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
     private ModelMapper modelMapper;
 
     @Override
-    public ArticleDto create(Article article, Principal principal, MultipartFile file) {
+    public List<ArticleDto> readAll() {
+        List<ArticleDto> dtos = new ArrayList<ArticleDto>();
+
+        for (Article article : articleRepository.findAll()) {
+            dtos.add(modelMapper.map(article, ArticleDto.class));
+        }
+
+        return dtos;
+    }
+
+    @Override
+    public ArticleDto create(Article article, Principal principal, MultipartFile[] files) {
+        String url = "";
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
@@ -38,7 +60,25 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
             article.setUser(user);
         }
 
+        if (article.getPublishedOn() == null) {
+            article.setPublishedOn(LocalDate.now());
+        }
+
         ArticleDto dto = modelMapper.map(articleRepository.save(article), ArticleDto.class);
+
+        if (files != null && files.length > 0) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    try {
+                        CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+                        url = futureUrl.get();
+                        imageService.saveImageOnDB(url, article);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
 
         return dto;
     }
@@ -51,14 +91,13 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
 
     @Override
     public ArticleDto read(Long key) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        Optional<Article> optArticle = articleRepository.findById(key);
+        if (optArticle.isPresent()) {
+            return modelMapper.map(optArticle.get(), ArticleDto.class);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author id=" + key + " not found");
+        }
 
-    @Override
-    public List<ArticleDto> readAll() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.annavincenzi.the_daily_nova.models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -45,7 +47,7 @@ public class Article {
     @Size(max = 1000)
     private String body;
 
-    @Column(nullable = true, length = 8)
+    @Column(nullable = false, length = 8)
     @NotNull
     private LocalDate publishedOn;
 
@@ -58,4 +60,7 @@ public class Article {
     @JsonIgnoreProperties({ "articles" })
     private Category category;
 
+    @OneToMany(mappedBy = "article")
+    @JsonIgnoreProperties({ "article" })
+    private List<Image> images;
 }
