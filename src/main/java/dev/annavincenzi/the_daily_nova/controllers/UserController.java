@@ -44,7 +44,7 @@ public class UserController {
         User existingUser = userService.findUserByEmail(userDto.getEmail());
 
         if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
-            result.rejectValue("email", null, "There is already an account registered with this email.");
+            result.rejectValue("email", "", "There is already an account registered with this email.");
         }
 
         if (result.hasErrors()) {
