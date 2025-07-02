@@ -4,5 +4,5 @@ INSERT INTO roles (name) VALUES ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_REVISOR'),
 
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 2);
 
-INSERT INTO categories (name) VALUES ('Politica'), ('Economia'), ('Gastronomia'), ('Sport'), ('Tempo Libero'), ('Tech');
+INSERT INTO categories (name) VALUES ('News'), ('Politics'), ('Business'), ('Sports'), ('Entertainment'), ('Tech');
 

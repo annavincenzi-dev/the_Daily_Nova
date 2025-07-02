@@ -7,39 +7,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- boostrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!-- Google fonts CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive&family=Cutive+Mono&display=swap" rel="stylesheet">
+
+    <!-- MY CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <title th:text="${title}">Title</title>
+    
 </head>
 
 
 <body>
 
     <!-- navbar fragment -->
-    <nav th:fragment="navbar">
-        <a th:href="@{/}" class="btn btn-primary">The Daily Nova</a>
+    <nav th:fragment="navbar" class="row w-100">
 
-        <ul>
-            <li sec:authorize="isAnonymous" >
-                <a th:href="@{/register}">Register</a>
-            </li>
-            <li sec:authorize="isAnonymous">
-                <a th:href="@{/login}">Login</a>
-            </li>
-            <li sec:authorize="isAuthenticated">
-                <a th:href="@{/logout}">Logout</a>
-            </li>
-            <li sec:authorize="isAuthenticated">
-                <a href="/articles/create">Create new article</a>
-            </li>
-            <li>
-                <a href="/articles">All Articles</a>
-            </li>
-            <li sec:authorize="isAuthenticated">
-                <p sec:authorize="isAuthenticated" th:text="'Benvenut*, ' + ${#authentication.principal.fullName}">Benvenut</p>
-                <p sec:authorize="isAuthenticated" th:text="${#authentication.principal.authorities[0].authority.replace('ROLE_', '')}">Role</p>
-            </li>
-        </ul>
+        
+        <div class="col-3">
+            <a th:href="@{/}" class="btn btn-primary">The Daily Nova</a>
+        </div>
+        
+        <div class="col-3" sec:authorize="isAnonymous">
+            
+        </div>
+        
+        <div class="col-3" sec:authorize="isAnonymous">
+            <a th:href="@{/login}">Login</a>
+        </div>
+
+        <div class="col-3" sec:authorize="isAuthenticated">
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+         
+        <div class="col-3">
+        <a sec:authorize="isAuthenticated" href="/articles/create">Create new article</a>
+        </div>
+
+        <div class="col-3">
+            <a href="/articles">All Articles</a>
+        </div>
+
+        <div class="col-3" sec:authorize="isAuthenticated">
+            <p th:text="'Benvenut*, ' + ${#authentication.principal.fullName}">Benvenut</p>
+            <p >Role</p>
+        </div>
     </nav>
+
+    <!-- Category navigation fragment -->
+     <div class="row" th:fragment="categoryNavigation">
+        <div class="col-2 text-center fontBig txtWhite bgDark pb-3 px-0" th:each="cat : ${navbarCategories}">
+            <a th:href="@{'/categories/search/' + ${cat.id}}" th:text="${cat.name}"></a>
+        </div>
+     </div>
+
+     <!-- article fragment -->
+      <div class="col-md-8 card row align-items-center justify-content-center my-3" th:fragment="articleCard">
+        <div class="row h-100 align-items-center justify-content-center">
+            <div class="col-6 d-flex justify-content-center align-items-center p-0 pe-3">
+                <img th:if="${article.images.size() > 0}" th:src="${article.images[0].path}" alt="" class="img-fluid">
+                <img th:unless="${article.images.size() > 0}" th:src="@{/images/default.png}" alt="" class="img-fluid">
+            </div>
+            <div class="col-6 d-flex flex-column justify-content-center pe-4 align-items-start">
+                <h2 class="fontBig text-start fonts fontsize3 txtBlack" th:text="${article.title}">Title</h2>
+                <h3 class="fontBig text-start fontsize4 txtBlack" th:text="${article.subtitle}">Subtitle</h3>
+                <p class="fontBig text-start fontsize5 txtBlack multiline-truncate" th:text="${article.body}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus facilis quaerat consequuntur aut incidunt, saepe similique corporis voluptate ut itaque.</p>
+                <div class="w-100 d-flex justify-content-between">
+                    <a href="" class="fontBig text-start fontsize4 txtBlack"><strong class="borderBottom">Read more</strong></a>
+                    <p class="fontBig text-end fontsize4 txtBlack" th:text="${article.publishedOn}">XX/XX/XXXX</p>
+                </div>
+            </div>
+            
+        </div>
+      </div>
+
+      <!-- news ticker fragment -->
+       <div class="news-ticker bgDark text-white py-2 overflow-hidden" th:fragment="newsTicker">
+            <div class="ticker-track d-flex" id="tickerTrack">
+                <span th:each="article : ${articles}" class="me-5 fontBig fontSize4 txtWhite"><strong th:text="${article.category.name} + ':'"></strong> <span th:text="${article.title}"></span></span>
+        </div>
+    </div>
+
+    <!-- User dashboard fragment -->
+
+    <div class="bgDark pb-3 d-flex flex-column align-items-center justify-content-center" th:fragment="userDashboard" >
+        <!-- register form -->
+         <form sec:authorize="isAnonymous" th:action="@{/register/save}" method="post" role="form" th:object="${user}">
+
+            <h1 class="fontBig txtWhite fontsize3 text-center my-3">Create an account</h1>
+
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label for="firstName" class="txtWhite fontsize4 fontBig">First Name</label>
+                    <input id="firstName" class="regInput fontBig fontsize4" name="firstName" th:field="*{firstName}" type="text" th:classappend="${#fields.hasErrors('firstName')} ? 'errInput' : ''" th:placeholder="${#fields.hasErrors('firstName')} ? '*' : ''">  
+                </div>
+
+
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label for="lastName" class="txtWhite fontsize4 fontBig">Last Name</label>
+                <input class="regInput fontBig fontsize4" id="lastName" name="lastName" th:field="*{lastName}" type="text" th:classappend="${#fields.hasErrors('lastName')} ? 'errInput' : ''" th:placeholder="${#fields.hasErrors('lastName')} ? '*' : ''">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label for="email" class="txtWhite fontsize4 fontBig">Email</label>
+
+                <input class="regInput fontBig fontsize4" type="email" id="email" name="email" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'errInput' : ''" th:placeholder="${#fields.hasErrors('email')} ? '*' : ''">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label for="password" class="txtWhite fontsize4 fontBig">Password</label>
+                    <input class="regInput fontBig fontsize4" type="password" id="password" name="password" th:field="*{password}" th:classappend="${#fields.hasErrors('password')} ? 'errInput' : ''" th:placeholder="${#fields.hasErrors('password')} ? '*' : ''">
+            </div>
+            
+            <p th:if="${#fields.hasErrors('email')} or ${#fields.hasErrors('password')} or ${#fields.hasErrors('firstName')} or ${#fields.hasErrors('lastName')}" class="txtRed fontsize5 fontBig position-absolute"><span class="txtWhite fontsize4 ">*  </span>This field is required.</p>
+
+
+            <div class="d-flex flex-column align-items-center justify-content-center pt-4">
+                <button type="submit" class="btn fontBig fontsize4 txtWhite my-2">Sign Up</button>
+                <p class="fontBig txtWhite fontsize4 mt-3">Already have an account?</p>
+                <a href="" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn fontBig fontsize4 txtWhite my-2">Sign In</a>
+            </div>
+         </form>
+        
+         <!-- authenticated zone -->
+         <div sec:authorize="isAuthenticated" class="d-flex flex-column align-items-center justify-content-center">
+            <h2 class="fontBig fontsize3 txtWhite"><span th:text="${#strings.capitalize(#authentication.principal.authorities[0].authority.replace('ROLE_', '').toLowerCase())}"></span> Dashboard</h2>
+             <h3 class="fontBig fontsize4 txtWhite">Welcome back, <span th:text="${#authentication.principal.fullName}"></span> </h3>
+             <a href="/articles/create" class="btn fontBig fontsize4 txtWhite my-2">Write an article</a>
+
+             <a th:href="@{/logout}" class="btn fontBig fontsize4 txtWhite my-2">Logout</a>
+         </div>
+    </div>
+
+    <!-- login modal fragment -->
+
+    <div class="modal" th:fragment="loginModal" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            
+            <div class="modal-content">
+                
+                <div class="modal-header bgDark">
+                    <h5 class="modal-title fontBig fontsize3 bgDark txtWhite">Sign In</h5>
+                    
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body bgLight txtBlack">
+                    <form th:action="@{/login}" id="login" method="post" role="form">
+                        <div class="d-flex justify-content-between w-75 align-items-center mb-2">
+                            <label for="username" class="txBlack fontsize4 fontBig">Email</label>
+
+                            <input class="regInput logInput fontBig fontsize4" type="email" id="username" name="username">
+                        </div> 
+
+                        <div class="d-flex justify-content-between w-75 align-items-center mb-2">
+                            <label for="password" class="txtBlack fontsize4 fontBig">Password</label>
+                            <input class="regInput logInput fontBig fontsize4" type="password" id="password" name="password">
+                        </div>
+                    </form>
+                </div>
+            
+                
+                <div class="modal-footer bgDark">
+                <button type="button" class="btn fontBig fontsize4 txtBlack" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="event.preventDefault(); document.querySelector('#login').submit();" class="btn fontBig fontsize4 txtBlack">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- footer fragment -->
      <footer th:fragment="footer">

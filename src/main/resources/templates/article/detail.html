@@ -28,6 +28,10 @@
         <img src="/images/default.png" alt="Nessuna immagine disponibile">
     </div>
 
+    <p th:if="${article.category != null}">Category:
+        <a th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}"></a>
+    </p>
+
     <head th:insert="~{index :: footer}"></head>
     <script th:replace="~{index :: bootstrapScript}"></script>
 </body>

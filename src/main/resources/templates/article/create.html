@@ -23,7 +23,7 @@ xmlns:th="http://www.thymeleaf.org">
 
         <div>
             <label for="body">Article Body</label>
-            <input type="text" id="body" name="body" th:field="*{body}">
+            <textarea type="text" id="body" name="body" th:field="*{body}"></textarea>
             <p th:errors="*{body}" th:if="${#fields.hasErrors('body')}"></p>
         </div>
 

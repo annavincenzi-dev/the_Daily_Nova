@@ -1,5 +1,13 @@
 package dev.annavincenzi.the_daily_nova.controllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +17,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.dtos.UserDto;
 import dev.annavincenzi.the_daily_nova.models.User;
+import dev.annavincenzi.the_daily_nova.services.ArticleService;
 import dev.annavincenzi.the_daily_nova.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,15 +32,29 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
+    @Autowired
+    private ArticleService articleService;
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        model.addAttribute("user", new UserDto());
-        return "auth/register";
+    @GetMapping("/")
+    public String home(Model viewModel) {
+        LocalDateTime now = LocalDateTime.now();
+
+        String day = now.format(DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH));
+
+        String date = now.format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH));
+
+        List<ArticleDto> articles = articleService.readAll();
+
+        // articles home
+        Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishedOn).reversed());
+
+        List<ArticleDto> lastFiveArticles = articles.stream().limit(5).collect(Collectors.toList());
+
+        viewModel.addAttribute("articles", lastFiveArticles);
+        viewModel.addAttribute("day", day);
+        viewModel.addAttribute("date", date);
+        viewModel.addAttribute("user", new UserDto());
+        return "home";
     }
 
     @GetMapping("/login")
@@ -49,7 +73,13 @@ public class UserController {
 
         if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "auth/register";
+
+            // Passa anche day e date per la home perché la home li usa per mostrare info
+            LocalDateTime now = LocalDateTime.now();
+            model.addAttribute("day", now.format(DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH)));
+            model.addAttribute("date", now.format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH)));
+
+            return "home";
         }
 
         userService.saveUser(userDto, redirectAttributes, request, response);

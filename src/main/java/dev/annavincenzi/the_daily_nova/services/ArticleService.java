@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.models.Article;
+import dev.annavincenzi.the_daily_nova.models.Category;
 import dev.annavincenzi.the_daily_nova.models.User;
 import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.repositories.UserRepository;
@@ -104,6 +105,14 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
     public ArticleDto update(Long key, Article model, MultipartFile file) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public List<ArticleDto> searchByCategory(Category category) {
+        List<ArticleDto> dtos = new ArrayList<ArticleDto>();
+        for (Article article : articleRepository.findByCategory(category)) {
+            dtos.add(modelMapper.map(article, ArticleDto.class));
+        }
+        return dtos;
     }
 
 }

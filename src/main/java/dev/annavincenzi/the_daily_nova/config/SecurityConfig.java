@@ -32,10 +32,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/register/**").permitAll()
                                                 .requestMatchers("/register").permitAll()
                                                 .requestMatchers("/").permitAll()
-                                                .requestMatchers("/articles", "/images/**").permitAll()
+                                                .requestMatchers("/articles", "/images/**", "/css/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
-                                                .loginPage("/login")
+                                                .loginPage("/")
                                                 .loginProcessingUrl("/login")
                                                 .defaultSuccessUrl("/")
                                                 .permitAll())
