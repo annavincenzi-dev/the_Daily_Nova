@@ -1,4 +1,4 @@
-# The Daily Nova
+<!-- # The Daily Nova
 ## Sistema editoriale full-stack sviluppato in Java e Spring Boot.
 
 ## User Story #1
@@ -15,3 +15,9 @@
 - Relazione 1-a-N tra Categoria -> Articolo
 - Messaggio di conferma dopo l'inserimento dell'articolo.
 
+ -->
+
+#The Daily Nova
+
+## Nell'attesa che io finisca il progetto, ecco una piccola preview:
+![Preview di the Daily Nova](/src/main/resources/static/images/preview_thedailynova.gif)
