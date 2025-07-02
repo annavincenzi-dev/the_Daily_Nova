@@ -17,7 +17,7 @@
 
  -->
 
-#The Daily Nova
+# The Daily Nova
 
 ## Nell'attesa che io finisca il progetto, ecco una piccola preview:
 ![Preview di the Daily Nova](/src/main/resources/static/images/preview_thedailynova.gif)
