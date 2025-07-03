@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+
+    <h1 th:text="${title}"></h1>
+
+    <form th:action="@{/operations/career/form/save}" method="post" th:object="${careerRequest}">
+
+        <div>
+            <label for="body">Why would you like to join our team?</label>
+            <textarea name="body" id="body" th:field="*{body}"></textarea><
+        </div>
+
+        <div>
+            <label for="role">Which role are you interested in?</label>
+            <select name="role" id="role" th:field="*{role}">
+                <option th:each="role:${roles}" th:value="${role.id}" th:text="${#strings.capitalize(role.name.replace('ROLE_', '').toLowerCase())}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+    
+</body>
+</html>
