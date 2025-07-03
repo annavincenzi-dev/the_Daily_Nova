@@ -16,6 +16,9 @@ public class CareerRequestServiceImpl implements CareerRequestService {
     @Autowired
     private CareerRequestRepository careerRequestRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Transactional
     public boolean isRoleAlreadyAssigned(User user, CareerRequest careerRequest) {
         List<Long> allUsersIds = careerRequestRepository.findAllUsersIds();
@@ -33,6 +36,9 @@ public class CareerRequestServiceImpl implements CareerRequestService {
         careerRequest.setUser(user);
         careerRequest.setIsChecked(false);
         careerRequestRepository.save(careerRequest);
+
+        emailService.sendSimpleEmail("admin@dailynova.com",
+                "New career request for " + careerRequest.getRole().getName(), " from user: " + user.getUsername());
 
     }
 
