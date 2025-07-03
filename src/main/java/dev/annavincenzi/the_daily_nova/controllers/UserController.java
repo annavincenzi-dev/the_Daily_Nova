@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -88,5 +89,16 @@ public class UserController {
 
         return "redirect:/";
 
+    }
+
+    @GetMapping("/search/{id}")
+    public String userArticleSearch(@PathVariable("id") Long id, Model viewModel) {
+        User user = userService.find(id);
+        viewModel.addAttribute("title", "Tutti gli articoli trovati per utente" + user.getUsername());
+
+        List<ArticleDto> articles = articleService.searchByAuthor(user);
+        viewModel.addAttribute("articles", articles);
+
+        return "article/articles";
     }
 }

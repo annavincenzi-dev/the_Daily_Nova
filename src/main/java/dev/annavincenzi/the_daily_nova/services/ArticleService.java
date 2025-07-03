@@ -115,4 +115,14 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         return dtos;
     }
 
+    public List<ArticleDto> searchByAuthor(User user) {
+        List<ArticleDto> dtos = new ArrayList<ArticleDto>();
+
+        for (Article article : articleRepository.findByUser(user)) {
+            dtos.add(modelMapper.map(article, ArticleDto.class));
+        }
+
+        return dtos;
+    }
+
 }

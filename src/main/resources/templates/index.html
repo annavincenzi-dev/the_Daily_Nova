@@ -75,7 +75,7 @@
                 <h3 class="fontBig text-start fontsize4 txtBlack" th:text="${article.subtitle}">Subtitle</h3>
                 <p class="fontBig text-start fontsize5 txtBlack multiline-truncate" th:text="${article.body}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus facilis quaerat consequuntur aut incidunt, saepe similique corporis voluptate ut itaque.</p>
                 <div class="w-100 d-flex justify-content-between">
-                    <a href="" class="fontBig text-start fontsize4 txtBlack"><strong class="borderBottom">Read more</strong></a>
+                    <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="fontBig text-start fontsize4 txtBlack"><strong class="borderBottom">Read more</strong></a>
                     <p class="fontBig text-end fontsize4 txtBlack" th:text="${article.publishedOn}">XX/XX/XXXX</p>
                 </div>
             </div>

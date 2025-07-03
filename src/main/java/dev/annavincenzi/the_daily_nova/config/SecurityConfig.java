@@ -32,7 +32,10 @@ public class SecurityConfig {
                                                 .requestMatchers("/register/**").permitAll()
                                                 .requestMatchers("/register").permitAll()
                                                 .requestMatchers("/").permitAll()
-                                                .requestMatchers("/articles", "/images/**", "/css/**").permitAll()
+                                                .requestMatchers("/articles", "/images/**", "/css/**",
+                                                                "articles/detail/**", "/categories/search/{id}",
+                                                                "/search/{id}")
+                                                .permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
                                                 .loginPage("/")
