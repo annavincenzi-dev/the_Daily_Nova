@@ -1,6 +1,7 @@
 package dev.annavincenzi.the_daily_nova.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,10 @@ public class CategoryController {
 
         List<ArticleDto> articles = articleService.searchByCategory(modelMapper.map(category, Category.class));
 
-        viewModel.addAttribute("articles", articles);
+        List<ArticleDto> acceptedArticles = articles.stream()
+                .filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+
+        viewModel.addAttribute("articles", acceptedArticles);
 
         return "article/articles";
     }

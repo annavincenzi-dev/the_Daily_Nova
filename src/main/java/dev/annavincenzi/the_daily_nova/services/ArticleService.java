@@ -65,6 +65,8 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
             article.setPublishedOn(LocalDate.now());
         }
 
+        article.setIsAccepted(null);
+
         ArticleDto dto = modelMapper.map(articleRepository.save(article), ArticleDto.class);
 
         if (files != null && files.length > 0) {
@@ -123,6 +125,12 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         }
 
         return dtos;
+    }
+
+    public void setIsAccepted(Boolean result, Long id) {
+        Article article = articleRepository.findById(id).get();
+        article.setIsAccepted(result);
+        articleRepository.save(article);
     }
 
 }

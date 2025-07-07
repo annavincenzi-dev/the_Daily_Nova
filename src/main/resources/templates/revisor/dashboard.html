@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+   
+    <h1>Revisor dashboard</h1>
+
+    <h2>Articles to check</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subtitle</th>
+                <th>Category</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="article : ${articles}">
+                <td th:text="${article.title}"></td>
+                <td th:text="${article.subtitle}"></td>
+                <td th:if="${article.category}" th:text="${article.category.name}"></td>
+                <td th:unless="${article.category}">No category selected</td>
+                <td>
+                    <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}">Read full article</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</body>
+</html>

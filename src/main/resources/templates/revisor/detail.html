@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+    <h1>Review article</h1>
+
+    <h2 th:text="${article.title}"></h2>
+
+    <div class="row">
+        <div id="articleCarousel" class="carousel slide mb-4 col-6" data-bs-ride="carousel" th:if="${#lists.size(article.images) > 0}">
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="image, iterStat : ${article.images}" th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                    <img th:src="@{${image.path}}" class="d-block w-100" alt="Immagine articolo">
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Precedente</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Successivo</span>
+            </button>
+        </div>
+
+        <!-- Fallback se non ci sono immagini -->
+        <div th:unless="${#lists.size(article.images) > 0}" class="col-6">
+            <img src="/images/default.png" alt="Nessuna immagine disponibile" >
+        </div>
+    </div>
+
+    <h3 th:text="${article.subtitle}"></h3>
+
+    <p th:text="${article.body}"></p>
+
+    <p th:text="${article.publishedOn}"></p>
+
+    <a th:if="${article.category}" th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}"></a>
+
+    <p th:unless="${article.category}">No category</p>
+
+    <a th:href="@{/search/{id}(id=${article.user.id})}" th:text="${article.user.username}"></a>
+
+    <a th:href="@{/revisor/dashboard}">Back</a>
+
+    <form th:action="@{/articles/accept(action='accept', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit">Accept</button></form>
+
+    <form th:action="@{/articles/accept(action='reject', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit">Reject</button></form>
+
+
+    <script th:replace="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>

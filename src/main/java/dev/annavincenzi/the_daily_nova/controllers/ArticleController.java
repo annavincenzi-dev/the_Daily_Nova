@@ -1,10 +1,12 @@
 package dev.annavincenzi.the_daily_nova.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -22,6 +25,7 @@ import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.dtos.CategoryDto;
 import dev.annavincenzi.the_daily_nova.models.Article;
 import dev.annavincenzi.the_daily_nova.models.Category;
+import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.services.ArticleService;
 import dev.annavincenzi.the_daily_nova.services.CrudService;
 import jakarta.validation.Valid;
@@ -37,10 +41,22 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
     @GetMapping
     public String articlesIndex(Model viewModel) {
         viewModel.addAttribute("title", "Tutti gli articoli");
-        List<ArticleDto> articles = articleService.readAll();
+
+        List<ArticleDto> articles = new ArrayList<ArticleDto>();
+
+        for (Article article : articleRepository.findByIsAcceptedTrue()) {
+            articles.add(modelMapper.map(article, ArticleDto.class));
+        }
+
         /* Sort by date (latest to oldest) */
         Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishedOn).reversed());
         viewModel.addAttribute("articles", articles);
@@ -86,4 +102,26 @@ public class ArticleController {
         return "article/detail";
     }
 
+    @GetMapping("revisor/detail/{id}")
+    public String detailArticleRevisor(@PathVariable("id") Long id, Model viewModel) {
+        viewModel.addAttribute("title", "Article detail");
+        viewModel.addAttribute("article", articleService.read(id));
+        return "revisor/detail";
+    }
+
+    @PostMapping("/accept")
+    public String articleSetAccepted(@RequestParam("action") String action, @RequestParam("articleId") Long articleId,
+            RedirectAttributes redirectAttributes) {
+        if (action.equals("accept")) {
+            articleService.setIsAccepted(true, articleId);
+            redirectAttributes.addFlashAttribute("resultMessage", "Article accepted!");
+        } else if (action.equals("reject")) {
+            articleService.setIsAccepted(false, articleId);
+            redirectAttributes.addFlashAttribute("resultMessage", "Article rejected!");
+        } else {
+            redirectAttributes.addFlashAttribute("resultMessage", "Invalid action!");
+        }
+
+        return "redirect:/revisor/dashboard";
+    }
 }
