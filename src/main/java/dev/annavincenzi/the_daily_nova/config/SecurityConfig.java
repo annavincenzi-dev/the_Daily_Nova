@@ -38,7 +38,7 @@ public class SecurityConfig {
                                                 .hasRole("REVISOR")
                                                 .requestMatchers("/register/**", "/register", "/", "/articles",
                                                                 "/images/**", "/css/**", "articles/detail/**",
-                                                                "/categories/search/{id}")
+                                                                "/categories/search/{id}", "/articles/search")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
