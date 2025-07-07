@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+   
+    <h1>edit article</h1>
+
+    <form th:action="@{/articles/update/{id}(id=${article.id})}" method="post" th:object="${article}" enctype="multipart/form-data">
+
+        <!--  campi nascosti -->
+        <input type="hidden" th:field="*{publishedOn}" />
+
+        <input type="hidden" th:field="*{id}" />
+
+        <input type="text" name="title" th:field="*{title}" placeholder="Title">
+
+        <input type="text" name="subtitle" th:field="*{subtitle}" placeholder="Subtitle">
+
+        <textarea name="body" th:field="*{body}" placeholder="Body"></textarea>
+
+        <select name="category" id="category" th:field="*{category}">
+        <option th:each="category : ${categories}" 
+            th:value="${category.id}" 
+            th:text="${category.name}">
+        </option>
+        </select>
+
+
+        <div th:if="${article.images != null and #lists.size(article.images) > 0}">
+            <label for="oldImages">Article images</label>
+            <div th:each="image, iterStat : ${article.images}" class="w-25">
+                <img th:src="${image.path}" alt="" class="img-fluid">
+            </div>
+        </div>
+
+        <div th:if="${article.images == null or #lists.size(article.images) == 0}">
+            <label for="image">Article image</label>
+            <p>immagine assente</p>
+        </div>
+
+
+        <div>
+            <label for="image">New images</label>
+            <input type="file" name="files" id="image" multiple>
+
+        </div>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

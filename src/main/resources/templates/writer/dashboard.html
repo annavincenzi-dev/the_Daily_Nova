@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+    
+    <h1>Writer dashboard</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subtitle</th>
+                <th>Category</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="article : ${articles}">
+                <td th:text="${article.title}"></td>
+                <td th:text="${article.subtitle}"></td>
+                <td th:if="${article.category}" th:text="${article.category.name}"></td>
+                <td th:unless="${article.category}">No category selected</td>
+                <td>
+                    <a th:href="@{/articles/detail/{id}(id=${article.id})}">See full article</a>
+                    <a th:href="@{/articles/edit/{id}(id=${article.id})}">Edit article</a>
+                    <a th:href="@{/articles/delete/{id}(id=${article.id})}">Delete article</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -31,6 +31,7 @@ import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.services.ArticleService;
 import dev.annavincenzi.the_daily_nova.services.CrudService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/articles")
@@ -104,6 +105,41 @@ public class ArticleController {
         return "article/detail";
     }
 
+    @GetMapping("/edit/{id}")
+    public String editArticle(@PathVariable("id") Long id, Model viewModel) {
+        viewModel.addAttribute("title", "Update article");
+
+        viewModel.addAttribute("article", articleService.read(id));
+
+        viewModel.addAttribute("categories", categoryService.readAll());
+
+        return "article/edit";
+    }
+
+    @PostMapping("/update/{id}")
+    public String articleUpdate(@PathVariable("id") Long id, @Valid @ModelAttribute("article") Article article,
+            BindingResult result, RedirectAttributes redirectAttributes, Model viewModel, Principal principal,
+            MultipartFile[] files) {
+
+        if (result.hasErrors()) {
+            System.out.println("Validation errors: " + result.getAllErrors());
+            viewModel.addAttribute("title", "Update article");
+
+            ArticleDto existingArticle = articleService.read(id);
+            article.setImages(existingArticle.getImages());
+
+            viewModel.addAttribute("article", article);
+            viewModel.addAttribute("categories", categoryService.readAll());
+            return "article/edit";
+        }
+
+        articleService.update(id, article, files);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Article updated successfully!");
+
+        return "redirect:/writer/dashboard";
+    }
+
     @GetMapping("revisor/detail/{id}")
     public String detailArticleRevisor(@PathVariable("id") Long id, Model viewModel) {
         viewModel.addAttribute("title", "Article detail");
@@ -140,5 +176,13 @@ public class ArticleController {
         viewModel.addAttribute("articles", acceptedArticles);
 
         return "article/articles";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String articleDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        articleService.delete(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Article deleted successfully!");
+
+        return "redirect:/writer/dashboard";
     }
 }

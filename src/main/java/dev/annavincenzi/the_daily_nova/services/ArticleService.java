@@ -1,5 +1,6 @@
 package dev.annavincenzi.the_daily_nova.services;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.models.Article;
 import dev.annavincenzi.the_daily_nova.models.Category;
+import dev.annavincenzi.the_daily_nova.models.Image;
 import dev.annavincenzi.the_daily_nova.models.User;
 import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.repositories.UserRepository;
@@ -88,7 +90,23 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
 
     @Override
     public void delete(Long key) {
-        // TODO Auto-generated method stub
+        if (articleRepository.existsById(key)) {
+
+            Article article = articleRepository.findById(key).get();
+
+            for (Image image : article.getImages()) {
+                try {
+                    image.setArticle(null);
+                    imageService.deleteImage(image.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            articleRepository.deleteById(key);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
     }
 
@@ -101,12 +119,6 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Author id=" + key + " not found");
         }
 
-    }
-
-    @Override
-    public ArticleDto update(Long key, Article model, MultipartFile file) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     public List<ArticleDto> searchByCategory(Category category) {
@@ -140,6 +152,54 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         }
 
         return dtos;
+    }
+
+    @Override
+    public ArticleDto update(Long key, Article updatedArticle, MultipartFile[] files) {
+        String url = "";
+
+        Optional<Article> optionalArticle = articleRepository.findById(key);
+        if (optionalArticle.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Article not found");
+        }
+
+        Article existingArticle = optionalArticle.get();
+
+        updatedArticle.setId(key);
+        updatedArticle.setUser(existingArticle.getUser());
+        updatedArticle.setPublishedOn(existingArticle.getPublishedOn());
+
+        if (files != null && files.length > 0 && !files[0].isEmpty()) {
+            // Elimino immagini esistenti
+            for (Image image : existingArticle.getImages()) {
+                try {
+                    imageService.deleteImage(image.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete image");
+                }
+            }
+
+            // Salvo nuove immagini
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    try {
+                        CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+                        url = futureUrl.get();
+                        imageService.saveImageOnDB(url, updatedArticle);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Image upload failed");
+                    }
+                }
+            }
+        } else {
+            updatedArticle.setImages(existingArticle.getImages());
+        }
+
+        updatedArticle.setIsAccepted(null);
+        Article saved = articleRepository.save(updatedArticle);
+        return modelMapper.map(saved, ArticleDto.class);
     }
 
 }

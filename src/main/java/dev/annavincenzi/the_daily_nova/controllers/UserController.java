@@ -1,5 +1,6 @@
 package dev.annavincenzi.the_daily_nova.controllers;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -144,5 +145,17 @@ public class UserController {
         viewModel.addAttribute("categories", categoryService.readAll());
 
         return "revisor/dashboard";
+    }
+
+    @GetMapping("/writer/dashboard")
+    public String writerDashboard(Model viewModel, Principal principal) {
+        viewModel.addAttribute("title", "Your articles");
+
+        List<ArticleDto> userArticles = articleService.readAll().stream()
+                .filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
+
+        viewModel.addAttribute("articles", userArticles);
+
+        return "writer/dashboard";
     }
 }

@@ -136,9 +136,12 @@
          <div sec:authorize="isAuthenticated" class="d-flex flex-column align-items-center justify-content-center">
             <h2 class="fontBig fontsize3 txtWhite"><span th:text="${#strings.capitalize(#authentication.principal.authorities[0].authority.replace('ROLE_', '').toLowerCase())}"></span> Dashboard</h2>
              <h3 class="fontBig fontsize4 txtWhite">Welcome back, <span th:text="${#authentication.principal.fullName}"></span> </h3>
-             <a href="/articles/create" class="btn fontBig fontsize4 txtWhite my-2">Write an article</a>
+             
+             <a href="/articles/create" sec:authorize="hasRole('ROLE_WRITER')" class="btn fontBig fontsize4 txtWhite my-2">Write an article</a>
 
              <a href="/admin/dashboard" sec:authorize="hasRole('ROLE_ADMIN')" class="btn fontBig fontsize4 txtWhite my-2 position-relative">Admin Dashboard <span th:if="${careerRequests > 0}" class="badge bg-warning txtBlack fontsize5 rounded-pill position-absolute" th:text="${careerRequests}"></span></a>
+
+             <a href="/writer/dashboard" sec:authorize="hasRole('ROLE_WRITER')" class="btn fontBig fontsize4 txtWhite my-2 position-relative">Writer Dashboard</a>
 
              <a href="/revisor/dashboard" sec:authorize="hasRole('ROLE_REVISOR')" class="btn fontBig fontsize4 txtWhite my-2 position-relative">Revisor Dashboard<span th:if="${articlesToCheck > 0}" class="badge bg-warning txtBlack fontsize5 rounded-pill position-absolute" th:text="${articlesToCheck}"></span></a>
 

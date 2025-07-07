@@ -13,7 +13,7 @@ public interface CrudService<ReadDto, Model, Key> {
 
     ReadDto create(Model model, Principal principal, MultipartFile[] files);
 
-    ReadDto update(Key key, Model model, MultipartFile file);
+    ReadDto update(Key key, Model model, MultipartFile[] files);
 
     void delete(Key key);
 
