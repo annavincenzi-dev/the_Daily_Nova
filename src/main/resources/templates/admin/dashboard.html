@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+  
+    <h1>Admin Dashboard</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Wants to become...</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="request : ${requests}">
+                <td th:text="${request.user.username}"></td>
+                <td th:text="${request.role.name}"></td>
+                <td>
+                    <a th:href="@{/operations/career/request/detail/{id}(id=${request.id})}">Check request</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

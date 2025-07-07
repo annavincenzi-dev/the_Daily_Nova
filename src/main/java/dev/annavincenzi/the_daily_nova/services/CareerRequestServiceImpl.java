@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dev.annavincenzi.the_daily_nova.models.CareerRequest;
+import dev.annavincenzi.the_daily_nova.models.Role;
 import dev.annavincenzi.the_daily_nova.models.User;
 import dev.annavincenzi.the_daily_nova.repositories.CareerRequestRepository;
+import dev.annavincenzi.the_daily_nova.repositories.RoleRepository;
+import dev.annavincenzi.the_daily_nova.repositories.UserRepository;
 
 @Service
 public class CareerRequestServiceImpl implements CareerRequestService {
@@ -18,6 +21,12 @@ public class CareerRequestServiceImpl implements CareerRequestService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Transactional
     public boolean isRoleAlreadyAssigned(User user, CareerRequest careerRequest) {
@@ -44,14 +53,42 @@ public class CareerRequestServiceImpl implements CareerRequestService {
 
     @Override
     public void careerAccept(Long requestId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'careerAccept'");
+        CareerRequest request = careerRequestRepository.findById(requestId).get();
+
+        User user = request.getUser();
+        Role role = request.getRole();
+
+        List<Role> rolesUser = user.getRoles();
+        Role newRole = roleRepository.findByName(role.getName());
+        rolesUser.add(newRole);
+
+        user.setRoles(rolesUser);
+        userRepository.save(user);
+
+        user.setRoles(rolesUser);
+        userRepository.save(user);
+        request.setIsChecked(true);
+        careerRequestRepository.save(request);
+
+        emailService.sendSimpleEmail(user.getEmail(), "Career request accepted",
+                "Your request for " + newRole.getName() + " has been accepted");
+
     }
 
     @Override
     public CareerRequest find(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'find'");
+        return careerRequestRepository.findById(id).get();
+    }
+
+    @Override
+    public void careerReject(Long requestId) {
+        CareerRequest request = careerRequestRepository.findById(requestId).get();
+        request.setIsChecked(true);
+        request.setIsRejected(true);
+        careerRequestRepository.save(request);
+
+        emailService.sendSimpleEmail(request.getUser().getEmail(), "Career request rejected",
+                "Your request for " + request.getRole().getName() + " has been rejected");
     }
 
 }

@@ -64,7 +64,7 @@
      </div>
 
      <!-- article fragment -->
-      <div class="col-md-8 card row align-items-center justify-content-center my-3" th:fragment="articleCard">
+      <div class="card row align-items-center justify-content-center my-3" th:fragment="articleCard">
         <div class="row h-100 align-items-center justify-content-center">
             <div class="col-6 d-flex justify-content-center align-items-center p-0 pe-3">
                 <img th:if="${article.images.size() > 0}" th:src="${article.images[0].path}" alt="" class="img-fluid">
@@ -75,7 +75,7 @@
                 <h3 class="fontBig text-start fontsize4 txtBlack" th:text="${article.subtitle}">Subtitle</h3>
                 <p class="fontBig text-start fontsize5 txtBlack multiline-truncate" th:text="${article.body}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus facilis quaerat consequuntur aut incidunt, saepe similique corporis voluptate ut itaque.</p>
                 <div class="w-100 d-flex justify-content-between">
-                    <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="fontBig text-start fontsize4 txtBlack"><strong class="borderBottom">Read more</strong></a>
+                    <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="fontBig text-start fontsize4 txtBlack articleLink borderBottom p-0">Read more</a>
                     <p class="fontBig text-end fontsize4 txtBlack" th:text="${article.publishedOn}">XX/XX/XXXX</p>
                 </div>
             </div>
@@ -138,6 +138,8 @@
              <h3 class="fontBig fontsize4 txtWhite">Welcome back, <span th:text="${#authentication.principal.fullName}"></span> </h3>
              <a href="/articles/create" class="btn fontBig fontsize4 txtWhite my-2">Write an article</a>
 
+             <a href="/admin/dashboard" class="btn fontBig fontsize4 txtWhite my-2 position-relative">Admin Dashboard <span th:if="${careerRequests > 0}" class="badge bg-warning txtBlack fontsize5 rounded-pill position-absolute" th:text="${careerRequests}"></span></a>
+
              <a th:href="@{/logout}" class="btn fontBig fontsize4 txtWhite my-2">Logout</a>
          </div>
     </div>
@@ -189,7 +191,7 @@
         </ul>
 
         <ul>
-            <li>
+            <li sec:authorize="isAuthenticated">
                 <a th:href="@{/operations/career/form}">Job Opportunities</a>
             </li>
         </ul>

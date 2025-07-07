@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}"></head>
+<body>
+
+    <h1 th:text="${request.user.username} + 'Request'">Request detail</h1>
+
+    <p th:text="${request.role.name}"></p>
+    
+    <p th:text="${request.body}"></p>
+
+    <form th:action="@{/operations/career/request/accept/{id}(id=${request.id})}" method="post"><button type="submit">Accept</button></form>
+
+    <form th:action="@{/operations/career/request/reject/{id}(id=${request.id})}" method="post"><button type="submit">Reject</button></form>
+    <a th:href="@{/admin/dashboard}">Back</a>
+</body>
+</html>

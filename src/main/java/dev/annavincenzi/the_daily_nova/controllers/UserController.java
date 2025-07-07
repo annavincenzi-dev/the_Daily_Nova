@@ -21,7 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.dtos.UserDto;
 import dev.annavincenzi.the_daily_nova.models.User;
+import dev.annavincenzi.the_daily_nova.repositories.CareerRequestRepository;
 import dev.annavincenzi.the_daily_nova.services.ArticleService;
+import dev.annavincenzi.the_daily_nova.services.CategoryService;
 import dev.annavincenzi.the_daily_nova.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +37,12 @@ public class UserController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private CareerRequestRepository careerRequestRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/")
     public String home(Model viewModel) {
@@ -100,5 +108,14 @@ public class UserController {
         viewModel.addAttribute("articles", articles);
 
         return "article/articles";
+    }
+
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model viewModel) {
+        viewModel.addAttribute("title", "New job applications");
+        viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
+        viewModel.addAttribute("categories", categoryService.readAll());
+
+        return "admin/dashboard";
     }
 }

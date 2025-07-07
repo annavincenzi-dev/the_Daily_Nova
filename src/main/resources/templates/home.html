@@ -37,8 +37,8 @@ xmlns:th="http://www.thymeleaf.org">
 
         </div>
 
-        <div class="" th:each="article : ${articles}">
-            <div th:insert="~{index :: articleCard(article=${article})}" class="w-100"></div>
+        <div class="row" th:each="article : ${articles}">
+            <div th:insert="~{index :: articleCard(article=${article})}" class="col-8"></div>
         </div>
         
 

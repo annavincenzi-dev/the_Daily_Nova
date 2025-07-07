@@ -10,6 +10,8 @@ import dev.annavincenzi.the_daily_nova.models.CareerRequest;
 
 public interface CareerRequestRepository extends CrudRepository<CareerRequest, Long> {
 
+    List<CareerRequest> findByIsCheckedFalseAndIsRejectedFalse();
+
     List<CareerRequest> findByIsCheckedFalse();
 
     @Query(value = "SELECT user_id FROM users_roles", nativeQuery = true)

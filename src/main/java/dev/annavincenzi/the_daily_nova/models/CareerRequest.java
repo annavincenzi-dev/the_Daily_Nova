@@ -29,6 +29,9 @@ public class CareerRequest {
     @Column
     private Boolean isChecked;
 
+    @Column
+    private Boolean isRejected = false;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
