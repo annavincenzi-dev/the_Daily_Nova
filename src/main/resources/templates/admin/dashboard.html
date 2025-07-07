@@ -5,7 +5,8 @@
   
     <h1>Admin Dashboard</h1>
 
-    <table>
+    <h2>Career requests</h2>
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>User</th>
@@ -19,6 +20,28 @@
                 <td th:text="${request.role.name}"></td>
                 <td>
                     <a th:href="@{/operations/career/request/detail/{id}(id=${request.id})}">Check request</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Categories</h2>
+    <a th:href="@{/categories/create}">Create a new category</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>category</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.id}"></td>
+                <td th:text="${category.name}"></td>
+                <td>
+                    <a th:href="@{/categories/edit/{id}(id=${category.id})}">Update category</a>
+                    <a th:href="@{/categories/delete/{id}(id=${category.id})}">Delete category</a>
                 </td>
             </tr>
         </tbody>

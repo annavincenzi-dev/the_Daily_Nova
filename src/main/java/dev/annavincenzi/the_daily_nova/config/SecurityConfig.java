@@ -29,12 +29,13 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http.csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/register/**").permitAll()
-                                                .requestMatchers("/register").permitAll()
-                                                .requestMatchers("/").permitAll()
-                                                .requestMatchers("/articles", "/images/**", "/css/**",
-                                                                "articles/detail/**", "/categories/search/{id}",
-                                                                "/search/{id}")
+                                                .requestMatchers("/admin/dashboard", "/categories/create",
+                                                                "/categories/delete/{id}", "/categories/update/{id}",
+                                                                "/categories/edit/{id}")
+                                                .hasRole("ADMIN")
+                                                .requestMatchers("/register/**", "/register", "/", "/articles",
+                                                                "/images/**", "/css/**", "articles/detail/**",
+                                                                "/categories/search/{id}")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form
