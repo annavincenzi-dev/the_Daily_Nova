@@ -47,6 +47,7 @@ public class CategoryController {
                 .filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
 
         viewModel.addAttribute("articles", acceptedArticles);
+        viewModel.addAttribute("selectedCategoryId", id);
 
         return "article/articles";
     }

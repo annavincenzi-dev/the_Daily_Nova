@@ -77,6 +77,7 @@ public class UserController {
         viewModel.addAttribute("day", day);
         viewModel.addAttribute("date", date);
         viewModel.addAttribute("user", new UserDto());
+        viewModel.addAttribute("page", "home");
         return "home";
     }
 

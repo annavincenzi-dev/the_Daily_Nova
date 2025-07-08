@@ -4,7 +4,7 @@
 <body>
     <h1>Create a new category</h1>
 
-    <form th:action="@{/categories}" method="POST" th:object="${category}">
+    <form th:action="@{/categories/save}" method="POST" th:object="${category}">
         <input type="text" name="name" th:field="*{name}" placeholder="Category name">ù
 
         <button type="submit">Create</button>

@@ -73,6 +73,10 @@ a:hover{
     border-bottom: 1px solid var(--dark);
 }
 
+.borderTop{
+    border-top: 1px solid var(--light);
+}
+
 .fit-content{
     height: fit-content;
 }
@@ -150,9 +154,13 @@ a:hover{
   box-shadow: none;
 }
 
+.selected-category{
+    color: white;
+}
+
 .multiline-truncate {
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* numero di righe */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -160,4 +168,32 @@ a:hover{
 .articleLink:hover{
     color: blue;
     font-weight: bolder;
+}
+
+.searchbar{
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 1px solid var(--light);
+    color: var(--light);
+}
+
+.searchbar::placeholder{
+    color: var(--light);
+    font-family: cutive mono;
+    font-style: italic;
+}
+
+.searchbar:focus{
+    border: 0px;
+    border-bottom: 1px solid var(--light);
+    outline: none;
+}
+
+.searchbar:focus::placeholder{
+    color: transparent;
+}
+
+.searchBtn{
+    background-color: transparent;
+    border: 0px;
 }

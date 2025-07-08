@@ -7,13 +7,13 @@ xmlns:th="http://www.thymeleaf.org">
     <div class="container-fluid p-0">
     <!-- <head th:insert="~{index :: navbar}"></head> -->
 
-    <div th:if="${param.notAuthorized}">
-        <p>Not authorized!</p>
-    </div>
+        <div th:if="${param.notAuthorized}">
+            <p>Not authorized!</p>
+        </div>
 
-    <div th:if="${successMessage}"><p th:text="${successMessage}"></p></div>
+        <div th:if="${successMessage}"><p th:text="${successMessage}"></p></div>
 
-    <div th:if="${errorMessage}"><p th:text="${errorMessage}"></p></div>
+        <div th:if="${errorMessage}"><p th:text="${errorMessage}"></p></div>
 
 
         <div class="row py-5 homeHeading">
@@ -33,22 +33,22 @@ xmlns:th="http://www.thymeleaf.org">
 
             <div th:insert="~{index :: newsTicker(articles=${articles})}" class="col-md-8 col-6 p-0 m-0 fit-content"></div>
 
-            <div th:insert="~{index :: userDashboard}" class="col-md-4 col-6 p-0 m-0 position-absolute end-0"></div>
+            <div th:insert="~{index :: userDashboard}" class="col-md-4 col-6 p-0 m-0 position-absolute end-0">
+            </div>
 
         </div>
+
+        <div th:insert="~{index :: searchbar}" class="w-75"></div>
 
         <div class="row" th:each="article : ${articles}">
             <div th:insert="~{index :: articleCard(article=${article})}" class="col-8"></div>
         </div>
-        
-
-        
-        <div th:insert="~{index :: searchbar}"></div></div>
-        
+    </div>   
 
     <div th:insert="~{index :: loginModal}"></div>
-    <head th:insert="~{index :: footer}"></head>
-    </div>
+
     <script th:replace="~{index :: bootstrapScript}"></script>
+
+    <script th:replace="~{index :: timeZonesScript}"></script>
 </body>
 </html>

@@ -1,30 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="~{index :: head}"></head>
-<body>
-   
-    <div th:insert="~{index :: navbar}"></div>
+<head th:insert="~{index :: head}"/>
+<body class="bgLight overflow-x-hidden">
 
-    <div th:if="${successMessage}">
-        <p th:text="${successMessage}"></p>
+    <div class="w-100 d-flex align-items-center justify-content-center bgDark py-3">
+        <h1 class="fontBig txtWhite">The Daily Nova</h1>
     </div>
 
-    <h1>All Articles</h1>
-
-    <div th:if="${articles.size() > 0}" th:each="article : ${articles}">
-        <img th:if="${article.images.size() > 0}" th:src="${article.images[0].path}" alt="">
-        <img th:unless="${article.images.size() > 0}" th:src="@{/images/default.png}" alt="">
-
-        <h2 th:text="${article.title}"></h2>
-        <h3 th:text="${article.subtitle}"></h3>
-        <h4 th:text="${article.user.username}"></h4>
-
-        <a > Details</a>
+    <div th:insert="~{index :: categoryNavigation}" class="w-100"></div>
+    <div th:insert="~{index :: searchbar}"></div>
+    
+    <div class="row" th:each="article : ${articles}">
+        <div th:insert="~{index :: articleCard(article=${article})}" class="col-12"></div>
     </div>
-
-    <div th:unless="${articles.size() > 0}">
-        <p>No articles found</p>
-    </div>
-
 </body>
 </html>

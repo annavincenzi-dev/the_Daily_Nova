@@ -63,6 +63,8 @@ public class ArticleController {
         Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishedOn).reversed());
         viewModel.addAttribute("articles", articles);
 
+        viewModel.addAttribute("page", "articles");
+
         return "article/articles";
     }
 

@@ -15,6 +15,17 @@
 - Relazione 1-a-N tra Categoria -> Articolo
 - Messaggio di conferma dopo l'inserimento dell'articolo.
 
+TODO
+
+- frontend 
+-- searchbar
+-- all articles
+-- dettaglio articolo
+-- writer/revisor/admin dashboards
+-- lavora con noi e footer
+
+--responsiveness
+
  -->
 
 # The Daily Nova

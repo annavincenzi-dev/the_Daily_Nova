@@ -4,8 +4,6 @@ xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
 <body>
 
-    <head th:insert="~{index :: navbar}"></head>
-
     <h1>Inserisci un nuovo articolo</h1>
 
     <form th:action="@{/articles}" method="post" th:object="${article}" enctype="multipart/form-data">
