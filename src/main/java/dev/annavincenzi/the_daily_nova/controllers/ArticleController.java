@@ -31,7 +31,6 @@ import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.services.ArticleService;
 import dev.annavincenzi.the_daily_nova.services.CrudService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/articles")
