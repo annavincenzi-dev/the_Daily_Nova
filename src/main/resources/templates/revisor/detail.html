@@ -1,55 +1,76 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
-<body>
-    <h1>Review article</h1>
+<body class="bgLight">
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
 
-    <h2 th:text="${article.title}"></h2>
+            <div class="col-12 d-flex align-items-center justify-content-center bgDark py-3">
+                <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
+            </div>
 
-    <div class="row">
+            <div th:insert="~{index :: categoryNavigation}" class="container-fluid"></div>
+            
+            <div th:insert="~{index :: searchbar}" class="p-0"></div>
+    
+            <h2 class="fontBig txtBlack fontsize2 text-center mt-3"><strong>Review: </strong><span th:text="${article.title}"></span></h2>
+
+            <h3 class="fontBig txtBlack fontsize3 text-center mb-3" th:text="${article.subtitle}">Subtitle</h3></h3>
+
+    <!-- Carosello immagini -->
         <div id="articleCarousel" class="carousel slide mb-4 col-6" data-bs-ride="carousel" th:if="${#lists.size(article.images) > 0}">
             <div class="carousel-inner">
-                <div class="carousel-item" th:each="image, iterStat : ${article.images}" th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                <div class="carousel-item" th:each="image, iterStat : ${article.images}" th:classappend="${iterStat.index == 0} ? 'active'">
+                    
                     <img th:src="@{${image.path}}" class="d-block w-100" alt="Immagine articolo">
+                
                 </div>
             </div>
 
             <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Precedente</span>
+                <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Successivo</span>
+                <span class="visually-hidden">Next</span>
             </button>
         </div>
 
-        <!-- Fallback se non ci sono immagini -->
-        <div th:unless="${#lists.size(article.images) > 0}" class="col-6">
-            <img src="/images/default.png" alt="Nessuna immagine disponibile" >
+    <!-- Fallback se non ci sono immagini -->
+        <div th:unless="${#lists.size(article.images) > 0}" class="mb-4 col-6 d-flex justify-content-center align-items-center">
+            <img src="/images/default.png" alt="Nessuna immagine disponibile" class="img-fluid">
+        </div>
+
+        <p th:text="${article.body}" class="col-5 text-justify fontBig txtBlack fontsize4"></p>
+
+        <div class="col-12 d-flex align-items-center justify-content-evenly mb-5 mt-2">
+            <p th:if="${article.category != null}" class="fontBig txtBlack fontsize4">
+                <a th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}" class="hoverCustom borderBottom"></a>
+            </p>
+
+            <p class="fontBig txtBlack fontsize4">Written by <a th:href="@{/search/{id}(id=${article.user.id})}" th:text="${article.user.username}" class="hoverCustom borderBottom"></a>
+            </p>
+
+            <p class="fontBig txtBlack fontsize4">On <span th:text="${article.publishedOn}"></span></p>
+
+        </div>
+
+        <div class="col-12 d-flex align-items-center justify-content-evenly my-5">
+
+            <form th:action="@{/articles/accept(action='accept', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit" class="accBtn py-2 fontBig fontsize4">Accept</button></form>
+
+            <form th:action="@{/articles/accept(action='reject', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit" class="rejBtn py-2 fontBig fontsize4">Reject</button></form>
+        
+        </div>
+
+        <div th:insert="~{index :: footer}" class="p-0"></div>
+
+
         </div>
     </div>
 
-    <h3 th:text="${article.subtitle}"></h3>
-
-    <p th:text="${article.body}"></p>
-
-    <p th:text="${article.publishedOn}"></p>
-
-    <a th:if="${article.category}" th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}"></a>
-
-    <p th:unless="${article.category}">No category</p>
-
-    <a th:href="@{/search/{id}(id=${article.user.id})}" th:text="${article.user.username}"></a>
-
-    <a th:href="@{/revisor/dashboard}">Back</a>
-
-    <form th:action="@{/articles/accept(action='accept', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit">Accept</button></form>
-
-    <form th:action="@{/articles/accept(action='reject', articleId=${article.id})}" method="post" th:object="${article}"><button type="submit">Reject</button></form>
-
 
     <script th:replace="~{index :: bootstrapScript}"></script>
-
 </body>
 </html>

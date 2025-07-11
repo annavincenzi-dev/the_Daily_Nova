@@ -3,11 +3,11 @@
 <head th:insert="~{index :: head}"/>
 <body class="bgLight overflow-x-hidden">
 
-    <div class="w-100 d-flex align-items-center justify-content-center bgDark py-3">
-        <h1 class="fontBig txtWhite">The Daily Nova</h1>
+    <div class="d-flex align-items-center justify-content-center bgDark py-3">
+        <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
     </div>
 
-    <div th:insert="~{index :: categoryNavigation}" class="w-100"></div>
+    <div th:insert="~{index :: categoryNavigation}" class="container-fluid"></div>
     <div th:insert="~{index :: searchbar}"></div>
     
     <div class="row" th:each="article : ${articles}">

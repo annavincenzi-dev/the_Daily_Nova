@@ -2,51 +2,78 @@
 <html lang="en"
 xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
-<body>
+<body class="bgLight">
 
-    <h1>Inserisci un nuovo articolo</h1>
 
-    <form th:action="@{/articles}" method="post" th:object="${article}" enctype="multipart/form-data">
-        <div>
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" th:field="*{title}">
-            <p th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
+    <div class="container-fluid">
+
+        <div class="row justify-content-center align-items-center">
+
+            <div class="col-12 d-flex align-items-center justify-content-center bgDark py-3">
+                <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
+            </div>
+
+            <h1 class="fontsize2 fontBig txtBlack text-center col-12 my-3">Write an article</h1>
+    
+    
+
+            <form th:action="@{/articles}" method="post" th:object="${article}" enctype="multipart/form-data" class="col-10">
+                <div class="row justify-content-center align-items-center justify-content-center align-items-center my-3">
+                    <div class="col-6 d-flex flex-column text-center">
+                        <label for="title" class="txtBlack fontsize4 fontBig">Title</label>
+                        <input type="text" class="createInput fontBig fontsize4" id="title" name="title" th:field="*{title}">
+                        <p th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
+                    </div>
+                
+
+                    <div class="col-6 d-flex flex-column text-center justify-content-center align-items-center">
+                        <label for="subtitle" class="txtBlack fontsize4 fontBig">Subtitle</label>
+                        <input type="text" class="createInput fontBig fontsize4 w-100" id="subtitle" name="subtitle" th:field="*{subtitle}">
+                        <p th:errors="*{subtitle}" th:if="${#fields.hasErrors('subtitle')}"></p>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center align-items-center my-3">
+                    <div class="col-12 d-flex flex-column text-center justify-content-center align-items-center">
+                        <label for="body" class="txtBlack fontsize4 fontBig">Article Body</label>
+                        <textarea type="text" id="body" name="body" th:field="*{body}" class="regInput logInput fontBig fontsize4 bodyInput w-100"></textarea>
+                        <p th:errors="*{body}" th:if="${#fields.hasErrors('body')}"></p>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col-3 d-flex flex-column text-center justify-content-center align-items-center">
+                        <label for="publishedOn" class="txtBlack fontsize4 fontBig">Published On:</label>
+                        <input type="date" class="createInput fontBig fontsize4" id="publishedOn" name="publishedOn" th:field="*{publishedOn}" placeholder="YYYYMMDD">
+                        <p th:errors="*{publishedOn}" th:if="${#fields.hasErrors('publishedOn')}"></p>
+                    </div>
+
+                    <div class="col-3 d-flex flex-column text-center justify-content-center align-items-center">
+                        <label for="category" class="txtBlack fontsize4 fontBig">Category</label>
+                        <select name="category" id="category" th:field="*{category}" class="fontBig fontsize p-2 txtWhite" >
+                            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            <p th:errors="*{category}" th:if="${#fields.hasErrors('category')}"></p>
+                        </select>
+                    </div>
+
+                    <div class="col-6 d-flex flex-column text-center justify-content-center align-items-center">
+                        <label for="image" class="txtBlack fontsize4 fontBig">Image</label>
+                        <input type="file" id="image" name="files" multiple class="fontBig fontsize4 createInput">
+                    </div>
+
+                </div>
+                <div class="row justify-content-center align-items-center">
+                    <button type="submit" class="col-3 btnCreate fontBig fontsize4 txBlack p-2 my-5">Submit</button>
+                </div>
+                
+            </form>
+
+            <head th:insert="~{index :: footer}"></head>
+
         </div>
-
-        <div>
-            <label for="subtitle">Subtitle</label>
-            <input type="text" id="subtitle" name="subtitle" th:field="*{subtitle}">
-            <p th:errors="*{subtitle}" th:if="${#fields.hasErrors('subtitle')}"></p>
-        </div>
-
-        <div>
-            <label for="body">Article Body</label>
-            <textarea type="text" id="body" name="body" th:field="*{body}"></textarea>
-            <p th:errors="*{body}" th:if="${#fields.hasErrors('body')}"></p>
-        </div>
-
-        <div>
-            <label for="publishedOn">Published On:</label>
-            <input type="date" id="publishedOn" name="publishedOn" th:field="*{publishedOn}" placeholder="YYYYMMDD">
-            <p th:errors="*{publishedOn}" th:if="${#fields.hasErrors('publishedOn')}"></p>
-        </div>
-
-        <div>
-            <label for="category">Category</label>
-            <select name="category" id="category" th:field="*{category}">
-                <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-                <p th:errors="*{category}" th:if="${#fields.hasErrors('category')}"></p>
-            </select>
-        </div>
-
-        <div>
-            <label for="image">Image</label>
-            <input type="file" id="image" name="files" multiple>
-        </div>
-
-        <button type="submit">Submit</button>
-    </form>
-    <head th:insert="~{index :: footer}"></head>
+    
+    </div>
+    
     <script th:replace="~{index :: bootstrapScript}"></script>
 </body>
 </html>

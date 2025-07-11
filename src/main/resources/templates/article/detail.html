@@ -2,40 +2,67 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
 <body>
-    <head th:insert="~{index :: navbar}"></head>
-    <h1>Detail of</h1>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
+
+            <div class="col-12 d-flex align-items-center justify-content-center bgDark py-3">
+                <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
+            </div>
+
+            <div th:insert="~{index :: categoryNavigation}" class="container-fluid"></div>
+            
+            <div th:insert="~{index :: searchbar}" class="p-0"></div>
+    
+            <h2 class="fontBig txtBlack fontsize2 text-center mt-3 fw-bold" th:text="${article.title}">Title</h2>
+
+            <h3 class="fontBig txtBlack fontsize3 text-center mb-3" th:text="${article.subtitle}">Subtitle</h3></h3>
 
     <!-- Carosello immagini -->
-    <div id="articleCarousel" class="carousel slide mb-4" data-bs-ride="carousel" th:if="${#lists.size(article.images) > 0}">
-        <div class="carousel-inner">
-            <div class="carousel-item" th:each="image, iterStat : ${article.images}" th:classappend="${iterStat.index == 0} ? 'active'">
-                <img th:src="@{${image.path}}" class="d-block w-100" alt="Immagine articolo">
+        <div id="articleCarousel" class="carousel slide mb-4 col-6" data-bs-ride="carousel" th:if="${#lists.size(article.images) > 0}">
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="image, iterStat : ${article.images}" th:classappend="${iterStat.index == 0} ? 'active'">
+                    
+                    <img th:src="@{${image.path}}" class="d-block w-100" alt="Immagine articolo">
+                
+                </div>
             </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#articleCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Precedente</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#articleCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Successivo</span>
-        </button>
-    </div>
-
     <!-- Fallback se non ci sono immagini -->
-    <div th:unless="${#lists.size(article.images) > 0}">
-        <img src="/images/default.png" alt="Nessuna immagine disponibile">
+        <div th:unless="${#lists.size(article.images) > 0}" class="col-5">
+            <img src="/images/default.png" alt="Nessuna immagine disponibile" class="img-fluid">
+        </div>
+
+        <p th:text="${article.body}" class="col-5 text-justify fontBig txtBlack fontsize4"></p>
+
+        <div class="col-12 d-flex align-items-center justify-content-evenly mb-5 mt-2">
+            <p th:if="${article.category != null}" class="fontBig txtBlack fontsize4">
+                <a th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}" class="hoverCustom borderBottom"></a>
+            </p>
+
+            <p class="fontBig txtBlack fontsize4">Written by <a th:href="@{/search/{id}(id=${article.user.id})}" th:text="${article.user.username}" class="hoverCustom borderBottom"></a>
+            </p>
+
+            <p class="fontBig txtBlack fontsize4">On <span th:text="${article.publishedOn}"></span></p>
+
+        </div>
+
+        <div th:insert="~{index :: footer}" class=""></div>
+
+
+        </div>
     </div>
 
-    <p th:if="${article.category != null}">Category:
-        <a th:href="@{/categories/search/{id}(id=${article.category.id})}" th:text="${article.category.name}"></a>
-    </p>
 
-    <p>Written by <a th:href="@{/search/{id}(id=${article.user.id})}" th:text="${article.user.username}"></a>
-    </p>
-
-    <head th:insert="~{index :: footer}"></head>
     <script th:replace="~{index :: bootstrapScript}"></script>
 </body>
 </html>

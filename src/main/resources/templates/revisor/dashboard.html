@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
-<body>
-   
-    <h1>Revisor dashboard</h1>
+<body class="bgLight overflow-x-hidden">
+    
+    <div th:if="${resultMessage}" class="position-absolute top-0 ms-3"><p th:text="${resultMessage}" class="fontBig fontsize3 text-center" th:classappend="${resultMessage} == 'Invalid action!' ? 'txtRed' : 'txtGreen'"></p></div>
 
-    <h2>Articles to check</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Subtitle</th>
-                <th>Category</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="article : ${articles}">
-                <td th:text="${article.title}"></td>
-                <td th:text="${article.subtitle}"></td>
-                <td th:if="${article.category}" th:text="${article.category.name}"></td>
-                <td th:unless="${article.category}">No category selected</td>
-                <td>
-                    <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}">Read full article</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container-fluid p-0">
+        <div class="row justify-content-center align-items-center">
 
+            <div class="col-12 d-flex align-items-center justify-content-center bgDark py-3">
+                <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
+            </div>
+  
+            <h1 class="col-12 fontBig txtBlack fontsize2 text-center my-3 fw-bold">Revisor Dashboard</h1>
+    
+            <div class="col-10 mb-5 minHeight">
+                <h2 class="fontBig fontsize3 txtBlack text-center">Articles to be reviewed</h2>
+                    <table th:if="${#lists.size(articles) >0}">
+                        <thead>
+                            <tr>
+                                <th class="fontsize4 text-center">Title</th>
+                                <th class="fontsize4 text-center">Subtitle</th>
+                                <th class="fontsize4 text-center">Category</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="article : ${articles}">
+                                <td th:text="${article.title}" class="fontsize4 tdHeight"></td>
+                                <td th:text="${article.subtitle}" class="fontsize4 tdHeight"></td>
+                                <td th:if="${article.category}" th:text="${article.category.name}" class="fontsize4 tdHeight"></td>
+                                <td th:unless="${article.category}" class="fontsize4 tdHeight">No category selected</td>
+                                <td class="d-flex align-items-center justify-content-around tdHeight">
+                                    <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}"><i class="bi bi-search txtBlack fontsize4"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <p th:unless="${#lists.size(articles) > 0}" class="txtBlack fontsize4 text-center fontBig">No articles found</p> 
+            </div>
+            
+            
+            <div th:insert="~{index :: footer}" class="col-12"></div>
+
+        </div>
+
+        
+    </div>
 
 </body>
 </html>

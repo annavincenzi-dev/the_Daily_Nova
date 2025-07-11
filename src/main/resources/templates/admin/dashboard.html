@@ -1,50 +1,211 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{index :: head}"></head>
-<body>
+<body class="bgLight">
+     <div th:if="${successMessage}" class="position-absolute top-0 ms-3"><p th:text="${successMessage}" class="txtGreen fontBig fontsize3 text-center"></p></div>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
+
+            <div class="col-12 d-flex align-items-center justify-content-center bgDark py-3">
+                <a href="/" class="fontBig bigTitle txtWhite">The Daily Nova</a>
+            </div>
   
-    <h1>Admin Dashboard</h1>
+            <h1 class="col-12 fontBig txtBlack fontsize2 text-center my-3 fw-bold">Admin Dashboard</h1>
 
-    <h2>Career requests</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Wants to become...</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="request : ${requests}">
-                <td th:text="${request.user.username}"></td>
-                <td th:text="${request.role.name}"></td>
-                <td>
-                    <a th:href="@{/operations/career/request/detail/{id}(id=${request.id})}">Check request</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="col-6 mb-5">
+                <h2 class="fontBig fontsize3 txtBlack text-center">Career requests</h2>
+                <table th:if="${#lists.size(requests) >0}">
+                    <thead>
+                        <tr >
+                            <th class="fontsize4 text-center">User</th>
+                            <th class="fontsize4 text-center">Wants to become...</th>
+                            <th class="fontsize4 text-center"></th>
+                        </tr>
 
-    <h2>Categories</h2>
-    <a th:href="@{/categories/create}">Create a new category</a>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>category</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="category : ${categories}">
-                <td th:text="${category.id}"></td>
-                <td th:text="${category.name}"></td>
-                <td>
-                    <a th:href="@{/categories/edit/{id}(id=${category.id})}">Update category</a>
-                    <a th:href="@{/categories/delete/{id}(id=${category.id})}">Delete category</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </thead>
+                    
+                    <tbody>
+                        <tr th:each="request : ${requests}">
+                            <td th:text="${request.user.username}" class="fontsize4"></td>
+                            <td th:text="${#strings.capitalize(request.role.name.replace('ROLE_', '').toLowerCase())}" class="fontsize4"></td>
+                            <td class="text-center">
+                                <a href="#" th:attr="data-bs-toggle='modal', data-bs-target='#requestDetail__' + ${request.id}"><i class="bi bi-search txtBlack fontsize4"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <p th:unless="${#lists.size(requests) > 0}" class="txtBlack fontsize4 text-center fontBig">There are currently no career requests to check.</p> 
+
+            </div>
+
+            <div class="col-6 mb-5">
+                <h2 class="fontBig fontsize3 txtBlack text-center">Categories</h2>
+                    
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="fontsize4 text-center">ID</th>
+                            <th class="fontsize4 text-center">Name</th>
+                            <th class="fontsize4 text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="category : ${categories}">
+                            <td th:text="${category.id}" class="fontsize4"></td>
+                            <td th:text="${category.name}" class="fontsize4"></td>
+                            <td class="fontsize4 d-flex align-items-center justify-content-around ">
+                                <a href="#" th:attr="data-bs-toggle='modal', data-bs-target='#updateCatModal__' + ${category.id}"><i class="bi bi-pencil txtBlack fontsize4"></i></a>
+                                <a th:href="@{/categories/delete/{id}(id=${category.id})}"><i class="bi bi-trash txtBlack"></i></a>
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td class="fontsize4"></td>
+                            <td class="fontsize4"></td>
+                            <td class="fontsize4 d-flex align-items-center justify-content-around">
+                                <a href="#" data-bs-toggle="modal"  data-bs-target="#newCatModal" class="hoverCustom"><i class="bi bi-plus-circle txtBlack hoverCustom fontsize4"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:insert="~{index :: footer}" class="p-0"></div>
+        </div>
+    </div>
+
+
+    <!-- update category modal -->
+    <div th:each="category : ${categories}">
+        <div class="modal" th:id="'updateCatModal__' + ${category.id}" tabindex="-1">
+            
+            <div class="modal-dialog">
+                
+                <div class="modal-content">
+                    
+                    <div class="modal-header bgDark">
+                        
+                        
+                        <h5 class="modal-title fontBig fontsize3 bgDark txtWhite">Update Category</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    </div>
+                    
+                    <div class="modal-body bgLight txtBlack">
+
+
+                    
+                        <form th:action="@{/categories/update/{id}(id=${category.id})}" th:id="'upCat__' + ${category.id}" method="post" th:object="${category}">
+                            <div class="d-flex justify-content-evenly align-items-center my-3">
+                                <p class="txtBlack fontsize4 fontBig mx-2">Previous name: </p>
+                                <p class="txtBlack fontsize4 fontBig mx-2" th:text="${category.name}"></p>
+                            </div>
+                            <div class="d-flex justify-content-evenly align-items-center my-3">
+                                <label for="name" class="txtBlack fontsize4 fontBig mx-2">New category name: </label>
+                                <input type="text" name="name" th:field="*{name}" class="createInput fontBig fontsize4">
+                            </div>
+
+                        </form>
+                    </div>
+                
+                    
+                    <div class="modal-footer bgDark">
+                    <button type="button" class="btn fontBig fontsize4 txtBlack" data-bs-dismiss="modal">Close</button>
+                    <button type="button" th:attr="onclick='event.preventDefault(); document.getElementById(\'upCat__' + ${category.id} + '\').submit();'" class="btn fontBig fontsize4 txtBlack">Update category</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- request detail modal -->
+
+    <div th:each="request : ${requests}">
+        <div class="modal" th:id="'requestDetail__' + ${request.id}" tabindex="-1">
+            
+            <div class="modal-dialog">
+                
+                <div class="modal-content">
+                    
+                    <div class="modal-header bgDark">
+                        
+                        
+                        <h5 class="modal-title fontBig fontsize3 bgDark txtWhite">Career Request details</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    </div>
+                    
+                    <div class="modal-body bgLight txtBlack">
+
+
+                    
+                        <form th:action="@{/categories/update/{id}(id=${category.id})}" th:id="'upCat__' + ${category.id}" method="post" th:object="${category}">
+                            <div class="d-flex flex-column justify-content-center align-items-center my-3">
+                                <p class="txtBlack fontsize4 fontBig mx-2"><strong>User: </strong><span th:text="${request.user.username}"></span></p>
+                                <p class="txtBlack fontsize4 fontBig mx-2"><strong>Wants to become: </strong><span th:text="${#strings.capitalize(request.role.name.replace('ROLE_', '').toLowerCase())}"></span></p>
+                            
+                                <p class="txtBlack fontsize4 fontBig mx-2"><strong>" </strong><span th:text="${request.body}"></span><strong> "</strong></p>
+
+                            </div>
+
+                        </form>
+                    </div>
+                
+                    
+                    <div class="modal-footer bgDark">
+                    <form th:action="@{/operations/career/request/reject/{id}(id=${request.id})}" method="post"><button type="submit" class="btn fontBig fontsize4 txtBlack">Reject</button></form>
+                    <form th:action="@{/operations/career/request/accept/{id}(id=${request.id})}" method="post"><button type="submit" class="btn fontBig fontsize4 txtBlack">Accept</button></form>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+    <!-- new category modal -->
+    <div class="modal" id="newCatModal" tabindex="-1">
+        
+        <div class="modal-dialog">
+            
+            <div class="modal-content">
+                
+                <div class="modal-header bgDark">
+                    
+                    
+                    <h5 class="modal-title fontBig fontsize3 bgDark txtWhite">Create new category</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+                
+                <div class="modal-body bgLight txtBlack">
+
+
+                
+                    <form th:action="@{/categories/save}" id="newCat" method="POST" th:object="${category}">
+                        <div class="d-flex justify-content-between align-items-center my-3">
+                            <label for="name" class="txtBlack fontsize4 fontBig mx-2">New category name: </label>
+                            <input type="text" name="name" th:field="*{name}" class="createInput fontBig fontsize4">
+                        </div>
+
+                    </form>
+                </div>
+            
+                
+                <div class="modal-footer bgDark">
+                <button type="button" class="btn fontBig fontsize4 txtBlack" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="event.preventDefault(); document.querySelector('#newCat').submit();" class="btn fontBig fontsize4 txtBlack">Create category</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+    <script th:replace="~{index :: bootstrapScript}"></script>
 </body>
 </html>

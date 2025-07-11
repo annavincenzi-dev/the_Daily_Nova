@@ -52,13 +52,6 @@ public class CategoryController {
         return "article/articles";
     }
 
-    @GetMapping("create")
-    public String categoryCreate(Model viewModel) {
-        viewModel.addAttribute("title", "Crea una categoria");
-        viewModel.addAttribute("category", new Category());
-        return "category/create";
-    }
-
     @PostMapping("save")
     public String categoryStore(@Valid @ModelAttribute("category") Category category, BindingResult result,
             RedirectAttributes redirectAttributes, Model viewModel) {
@@ -73,13 +66,6 @@ public class CategoryController {
         redirectAttributes.addFlashAttribute("successMessage", "Category created successfully!");
 
         return "redirect:/admin/dashboard";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String categoryEdit(@PathVariable("id") Long id, Model viewModel) {
-        viewModel.addAttribute("title", "Edit category");
-        viewModel.addAttribute("category", categoryService.read(id));
-        return "category/update";
     }
 
     @PostMapping("update/{id}")

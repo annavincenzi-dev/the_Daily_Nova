@@ -65,9 +65,9 @@
 
 
     <!-- Category navigation fragment -->
-     <div class="row" th:fragment="categoryNavigation">
-        <div class="col-2 text-center fontBig txtWhite bgDark pb-3 px-0" th:each="cat : ${navbarCategories}">
-            <a th:href="@{'/categories/search/' + ${cat.id}}" th:text="${cat.name}" th:classappend="${cat.id} == ${selectedCategoryId} ? ' selected-category' : ''"></a>
+     <div class="row flex-md-row bgDark" th:fragment="categoryNavigation" th:classappend="${page} == 'home' ? ' flex-column py-5 px-2 p-md-0 ' : 'py-3'">
+        <div class=" text-start text-md-center fontsize5 fontBig txtWhite bgDark pb-1 px-0" th:each="cat : ${navbarCategories}" th:classappend="${page} == 'home' ? ' col-md-2 col-12 text-start text-md-center' : ' col-4 col-md-2 text-center'">
+            <a th:href="@{'/categories/search/' + ${cat.id}}" class="ps-2 p-md-0 fontBig txtWhite fontsize4" th:text="${cat.name}" th:classappend="${cat.id} == ${selectedCategoryId} ? ' selected-category' : ''"></a>
         </div>
      </div>
     <!-- fine category navigation fragment -->
@@ -78,16 +78,16 @@
      <!-- article fragment -->
       <div class="card row align-items-center justify-content-center my-3" th:fragment="articleCard">
         <div class="row h-100 align-items-center justify-content-center">
-            <div class="col-6 d-flex justify-content-center align-items-center p-0 pe-3">
+            <div class="col-md-6 col-8 d-flex justify-content-center align-items-center p-0 pe-3">
                 <img th:if="${article.images.size() > 0}" th:src="${article.images[0].path}" alt="" class="img-fluid">
                 <img th:unless="${article.images.size() > 0}" th:src="@{/images/default.png}" alt="" class="img-fluid">
             </div>
-            <div class="col-6 d-flex flex-column justify-content-center pe-4 align-items-start">
+            <div class="col-md-6 col-10 d-flex flex-column justify-content-center pe-4 align-items-start">
                 <h2 class="fontBig text-start fonts fontsize3 txtBlack" th:text="${article.title}">Title</h2>
                 <h3 class="fontBig text-start fontsize4 txtBlack" th:text="${article.subtitle}">Subtitle</h3>
                 <p class="fontBig text-start fontsize5 txtBlack multiline-truncate" th:text="${article.body}">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus facilis quaerat consequuntur aut incidunt, saepe similique corporis voluptate ut itaque.</p>
                 <div class="w-100 d-flex justify-content-between">
-                    <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="fontBig text-start fontsize4 txtBlack articleLink borderBottom p-0">Read more</a>
+                    <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="fontBig text-start fontsize4 txtBlack hoverCustom borderBottom p-0">Read more</a>
                     <p class="fontBig text-end fontsize4 txtBlack" th:text="${article.publishedOn}">XX/XX/XXXX</p>
                 </div>
             </div>
@@ -239,24 +239,93 @@
             </div>
         </div>
     </div>
-
     <!-- fine login modal fragment -->
 
+
+
+
+    <!-- career modal fragment -->
+    <div class="modal" th:fragment="careerModal" id="careerModal" tabindex="-1">
+        
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            
+            <div class="modal-content">
+                
+                <div class="modal-header bgDark flex-column">
+                    
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fontBig fontsize3 bgDark txtWhite">Job Opportunities</h5>
+                    <h6 class="fontBig fontsize4 txtWhite">The Daily Nova is looking for talented people to join our team!</h6>
+                    
+
+                </div>
+                
+                <div class="modal-body bgLight txtBlack">
+
+                    <div class="d-flex align-items-center my-5 justify-content-evenly">
+                        <div class="d-flex flex-column align-items-center justify-content-center mx-2">
+                            <i class="bi bi-pen-fill iconsize txtBlack"></i>
+                            <p class="fontBig fontsize3 txtBlack">Writer</p>
+                            <p class="fontBig fontsize4 txtBlack text-center"> Writes and submits articles for review.</p>
+                        </div>
+
+                        <div class="d-flex flex-column align-items-center justify-content-center mx-2">
+                            <i class="bi bi-eyeglasses iconsize txtBlack"></i>
+                            <p class="fontBig fontsize3 txtBlack">Revisor</p>
+                            <p class="fontBig fontsize4 txtBlack text-center">Reviews, accepts or rejects articles.</p>
+                        </div>
+
+                        <div class="d-flex flex-column align-items-center justify-content-center mx-2">
+                            <i class="bi bi-shield-lock-fill iconsize txtBlack"></i>
+                            <p class="fontBig fontsize3 txtBlack">Admin</p>
+                            <p class="fontBig fontsize4 txtBlack text-center">Manages job requests and content categories.</p>
+                        </div>
+                    </div>
+
+                
+                    <form th:action="@{/operations/career/form/save}" id="career" method="post" role="form" th:object="${careerRequest}">
+                        <div class="d-flex flex-column justify-content-between align-items-center my-3">
+                            <label for="role" class="txtBlack fontsize4 fontBig">For which position are you applying?</label>
+                            <select name="role" id="role" th:field="*{role}" class="p-1 fontBig fontsize4">
+                                <option th:each="role:${roles}" th:value="${role.id}" th:text="${#strings.capitalize(role.name.replace('ROLE_', '').toLowerCase())}"></option>
+                             </select>
+                        </div>
+
+                        <div class="d-flex flex-column justify-content-between align-items-center my-3">
+                            <label for="body" class="txBlack fontsize4 fontBig">Tell us about yourself and why yould you like to join our team.</label>
+
+                            <textarea class="regInput logInput fontBig fontsize4 bodyInput" th:field="*{body}" id="body" name="body"></textarea>    
+                        </div> 
+
+                    </form>
+                </div>
+            
+                
+                <div class="modal-footer bgDark">
+                <button type="button" class="btn fontBig fontsize4 txtBlack" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="event.preventDefault(); document.querySelector('#career').submit();" class="btn fontBig fontsize4 txtBlack">Send Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
 
 
 
 
 
     <!-- footer fragment -->
-     <footer th:fragment="footer" class="bgDark d-flex flex-column align-items-center justify-content-center borderTop w-100 py-4">
+     <footer th:fragment="footer" class="bgDark d-flex align-items-center borderTop w-100 py-4" th:classappend="${page} == 'home' ? ' flex-column justify-content-start' : '  justify-content-evenly' ">
 
-        <div class="mx-4 text-center">
+        <div class="mx-4 text-center" th:classappend="${page} == 'home' ? ' ' : 'w-50' ">
             <h2 class="fontBig fontsize2 txtWhite">About <strong>Daily Nova</strong></h2>
         
             <p class="fontBig fontsize4 txtWhite">Daily Nova is your trusted source for the latest news, in-depth analysis, and insightful stories from around the world. We are committed to delivering accurate and engaging content that keeps you informed and inspired every day.</p>
         </div>
 
-        <div class="mx-2 mt-3 text-center">
+        <div class="mx-2 text-center d-flex flex-column align-items-center justify-content-center" th:classappend="${page} == 'home' ? ' mt-3 ' : '' ">
             <h2 class="fontBig fontsize2 txtWhite">Info</h2>
 
             <p class="fontBig fontsize4 txtWhite"><i class="bi bi-geo-alt-fill txtWhite fontsize4"></i><strong> Address: </strong> Via dei Matti, 0</p>
@@ -265,7 +334,7 @@
 
             <p class="fontBig fontsize4 txtWhite"><i class="bi bi-telephone-fill txtWhite fontsize4"></i><strong> Telephone: </strong> 333 3333 3333</p>
 
-            <a sec:authorize="isAuthenticated" th:href="@{/operations/career/form}" class="btn fontBig fontsize4 txtBlack my-5">Job Opportunities</a>
+            <a sec:authorize="isAuthenticated" data-bs-toggle="modal" data-bs-target="#careerModal" class="btn fontBig fontsize4 txtBlack" th:classappend="${page} == 'home' ? ' my-5 ' : 'd-none' ">Job Opportunities</a>
         </div>
                 
           
@@ -277,8 +346,8 @@
 
 
      <!-- searchbar fragment -->
-      <div class="row align-items-center">
-        <form th:action="@{/articles/search} " th:fragment="searchbar" method="get" class="bgDark d-flex align-items-center" th:classappend="${page} == 'home' ? ' justify-content-start ' : (${page} == 'articles' ? ' justify-content-center ' : '')">
+      <div class="row align-items-center justify-content-center">
+        <form th:action="@{/articles/search} " th:fragment="searchbar" method="get" class="bgDark d-flex align-items-center" th:classappend="${page} == 'home' ? ' justify-content-start ' : ' justify-content-center '">
             <input type="search" placeholder="Search article..." name="keyword" class="w-75 ms-md-5 searchbar mb-2">
             <button type="submit" class="searchBtn mb-2 ms-3"><i class="bi bi-search txtWhite"></i></button>
         </form>

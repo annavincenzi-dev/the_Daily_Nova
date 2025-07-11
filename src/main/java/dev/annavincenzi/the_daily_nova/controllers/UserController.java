@@ -19,14 +19,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dev.annavincenzi.the_daily_nova.dtos.ArticleDto;
 import dev.annavincenzi.the_daily_nova.dtos.UserDto;
 import dev.annavincenzi.the_daily_nova.models.Article;
+import dev.annavincenzi.the_daily_nova.models.CareerRequest;
+import dev.annavincenzi.the_daily_nova.models.Category;
+import dev.annavincenzi.the_daily_nova.models.Role;
 import dev.annavincenzi.the_daily_nova.models.User;
 import dev.annavincenzi.the_daily_nova.repositories.ArticleRepository;
 import dev.annavincenzi.the_daily_nova.repositories.CareerRequestRepository;
+import dev.annavincenzi.the_daily_nova.repositories.RoleRepository;
 import dev.annavincenzi.the_daily_nova.services.ArticleService;
 import dev.annavincenzi.the_daily_nova.services.CategoryService;
 import dev.annavincenzi.the_daily_nova.services.UserService;
@@ -45,6 +50,9 @@ public class UserController {
 
     @Autowired
     private CareerRequestRepository careerRequestRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private CategoryService categoryService;
@@ -68,22 +76,26 @@ public class UserController {
             articles.add(modelMapper.map(article, ArticleDto.class));
         }
 
+        // career request
+        List<Role> roles = roleRepository.findAll();
+        roles.sort(Comparator.comparing(Role::getName).reversed());
+        roles.removeIf(e -> e.getName().equals("ROLE_USER"));
+
         // articles home
         Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishedOn).reversed());
 
         List<ArticleDto> lastFiveArticles = articles.stream().limit(5).collect(Collectors.toList());
 
+        viewModel.addAttribute("title", "The Daily Nova");
         viewModel.addAttribute("articles", lastFiveArticles);
         viewModel.addAttribute("day", day);
         viewModel.addAttribute("date", date);
         viewModel.addAttribute("user", new UserDto());
         viewModel.addAttribute("page", "home");
-        return "home";
-    }
+        viewModel.addAttribute("careerRequest", new CareerRequest());
+        viewModel.addAttribute("roles", roles);
 
-    @GetMapping("/login")
-    public String login() {
-        return "auth/login";
+        return "home";
     }
 
     @PostMapping("/register/save")
@@ -131,10 +143,18 @@ public class UserController {
     }
 
     @GetMapping("/admin/dashboard")
-    public String adminDashboard(Model viewModel) {
+    public String adminDashboard(@RequestParam(value = "editId", required = false) Long editId, Model viewModel) {
         viewModel.addAttribute("title", "New job applications");
         viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
         viewModel.addAttribute("categories", categoryService.readAll());
+        viewModel.addAttribute("category", new Category());
+        viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
+
+        if (editId != null) {
+            viewModel.addAttribute("categoryToEdit", categoryService.read(editId));
+        } else {
+            viewModel.addAttribute("categoryToEdit", new Category());
+        }
 
         return "admin/dashboard";
     }
