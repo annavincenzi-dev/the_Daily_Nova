@@ -1,8 +1,3 @@
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap")
-</style>
-
-
 # The Daily Nova
 ## Sistema editoriale full-stack sviluppato in Java e Spring Boot.
 
@@ -108,7 +103,7 @@ Il progetto è stato sviluppato utilizzando le seguenti tecnologie e strumenti:
 
 ## Styles
 
-- **Font**: <p style="font-family: cutive mono; display: inline; font-size: 6vh">Cutive Mono</p>
+- **Font**: Cutive Mono
     - [Google Fonts](https://fonts.google.com/specimen/Cutive+Mono)
 - **Palette**: <br>
 ![Color Palette](/src/main/resources/static/images/Frame%201.png)
